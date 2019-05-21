@@ -24,29 +24,34 @@ import com.example.lab8.item.ItemViewModel
 import com.example.lab8.producto.Producto
 
 class ItemsFragment : Fragment() {
+
     companion object{
         var FECHA = ""
     }
 
     private lateinit var swipeBackground: ColorDrawable
-    private lateinit var itemViewModel: ItemViewModel
+    private lateinit var itemViewModel: ItemViewModel //Variable del view model
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding : FragmentItemsBinding = inflate(inflater, R.layout.fragment_items, container, false)
 
         swipeBackground = ColorDrawable(Color.parseColor("#ff0000"))
 
+        //Se instancia el recyclerView
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
+        //Se crea el adapter para el recyclerView
         val adapter = ItemAdapter()
         recyclerView.adapter = adapter
 
+        //View model para el item
         itemViewModel = ViewModelProviders.of(this).get(ItemViewModel::class.java)
         itemViewModel.getAllItems().observe(this, Observer {
             adapter.setItems(it)
         })
 
+        //Agregar un nuevo item a la lista de inventario
         if(MainActivity.CODIGO != ""){
             for(a : Producto in ProductoFragment.productoViewModel.getAllProducts().value!!.listIterator()){
                 val codigo = a.getCodigo()
@@ -57,11 +62,13 @@ class ItemsFragment : Fragment() {
             }
         }
 
+        //Se define el callback
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return false
             }
 
+            //Elimina un elemento al hacer swipe sobre el
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 itemViewModel.delete(adapter.getItemAt(viewHolder.adapterPosition))
                 Toast.makeText(activity, "Item eliminado", Toast.LENGTH_LONG).show()
@@ -85,18 +92,22 @@ class ItemsFragment : Fragment() {
             }
         }
 
+        //Se llama al callback del touchHelper
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
+        //Activa el menu de opciones en el fragment
         setHasOptionsMenu(true)
         return binding.root
     }
 
+    //Se define el layout de menu a utilizar
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.items_menu,menu)
     }
 
+    //Metodo que realiza una accion al elegir una opcion del menu
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.itemsFragment){
             itemViewModel.deleteAllItems()

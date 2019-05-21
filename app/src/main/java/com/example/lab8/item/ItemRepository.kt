@@ -9,15 +9,17 @@ import android.provider.SyncStateContract.Helpers.update
 
 
 class ItemRepository(application: Application) {
-    private val itemDao: ItemDao
-    private val allItems: LiveData<List<Item>>
-    private val database: ItemDatabase = ItemDatabase.getInstance(application)
+
+    private val itemDao: ItemDao //Se instancia el dao
+    private val allItems: LiveData<List<Item>> //Lista de todos los inventarios
+    private val database: ItemDatabase = ItemDatabase.getInstance(application) //Se obtiene la instancia de la base de datos
 
     init {
         itemDao = database.itemDao()
         allItems = itemDao.getAllItems()
     }
 
+    //Implementacion de los metodos del dao
     fun insert(item: Item) {
         InsertItemAsyncTask(itemDao).execute(item)
     }
@@ -38,6 +40,7 @@ class ItemRepository(application: Application) {
         return allItems
     }
 
+    //Funciones asincronas para realizar acciones sin esperar a que otras terminen
     private class InsertItemAsyncTask(private val itemDao: ItemDao) :
         AsyncTask<Item, Void, Void>() {
 

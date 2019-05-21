@@ -3,6 +3,7 @@ package com.example.lab8.inventario
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
+//Interfaz del dao, con las funciones basicas de una base de datos room
 @Dao
 interface InventarioDao {
 

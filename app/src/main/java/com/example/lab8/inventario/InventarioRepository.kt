@@ -6,15 +6,16 @@ import androidx.lifecycle.LiveData
 
 class InventarioRepository(application: Application) {
 
-    private val inventarioDao: InventarioDao
-    private val allInventarios: LiveData<List<Inventario>>
-    private val database: InventarioDatabase = InventarioDatabase.getInstance(application)
+    private val inventarioDao: InventarioDao //Se instancia el dao
+    private val allInventarios: LiveData<List<Inventario>> //Lista de todos los inventarios
+    private val database: InventarioDatabase = InventarioDatabase.getInstance(application) //Se obtiene la instancia de la base de datos
 
     init {
         inventarioDao = database.inventarioDao()
         allInventarios = inventarioDao.getAllInventarios()
     }
 
+    //Implementacion de los metodos del dao
     fun insert(inventario: Inventario) {
         InsertItemAsyncTask(inventarioDao).execute(inventario)
     }
@@ -35,6 +36,7 @@ class InventarioRepository(application: Application) {
         return allInventarios
     }
 
+    //Funciones asincronas para realizar acciones sin esperar a que otras terminen
     private class InsertItemAsyncTask(private val inventarioDao: InventarioDao) :
         AsyncTask<Inventario, Void, Void>() {
 

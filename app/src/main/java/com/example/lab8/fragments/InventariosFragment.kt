@@ -23,6 +23,7 @@ import com.example.lab8.inventario.Inventario
 import com.example.lab8.inventario.InventarioViewModel
 
 class InventariosFragment : Fragment() {
+    //Variable de view model de inventario
     private lateinit var inventarioViewModel: InventarioViewModel
     private lateinit var swipeBackground: ColorDrawable
 
@@ -31,27 +32,33 @@ class InventariosFragment : Fragment() {
 
         swipeBackground = ColorDrawable(Color.parseColor("#ff0000"))
 
+        //Se instancia el recyclerView y su layoutManager
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
+        //Se crea el adapter para el recyclerView
         val adapter = InventarioAdapter()
         recyclerView.adapter = adapter
 
+        //Observer para la lista de inventarios que se muestra, si la lista cambia se realiza la accion
         inventarioViewModel = ViewModelProviders.of(this).get(InventarioViewModel::class.java)
         inventarioViewModel.getAllInventarios().observe(this, Observer {
             adapter.setInventarios(it)
         })
 
+        //Insertar un nuevo inventario
         if(ItemsFragment.FECHA != ""){
             inventarioViewModel.insert(Inventario(ItemsFragment.FECHA))
             ItemsFragment.FECHA = ""
         }
 
+        //Callback para permitir el swipe para eliminar
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return false
             }
 
+            //Metodo onSwiped, elimina el elemento al que el usuario hace swipe
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 inventarioViewModel.delete(adapter.getProductAt(viewHolder.adapterPosition))
                 Toast.makeText(activity, "Producto eliminado", Toast.LENGTH_LONG).show()
@@ -75,18 +82,22 @@ class InventariosFragment : Fragment() {
             }
         }
 
+        //Se llama al callback
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
+        //Se activa el optionsMenu para el fragment
         setHasOptionsMenu(true)
         return binding.root
     }
 
+    //Define que layout de menu es el que se utiliza
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.inventarios_menu,menu)
     }
 
+    //Metodo que realiza una accion al elegir una opcion del menu
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.itemsFragment){
             return NavigationUI.onNavDestinationSelected(

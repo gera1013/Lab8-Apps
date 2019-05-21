@@ -5,15 +5,17 @@ import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 
 class ProductoRepository(application: Application) {
-    private val productoDao: ProductoDao
-    private val allProductos: LiveData<List<Producto>>
-    private val database: ProductoDatabase = ProductoDatabase.getInstance(application)
+
+    private val productoDao: ProductoDao //Se instancia el dao
+    private val allProductos: LiveData<List<Producto>> //Lista de todos los inventarios
+    private val database: ProductoDatabase = ProductoDatabase.getInstance(application) //Se obtiene la instancia de la base de datos
 
     init {
         productoDao = database.productoDao()
         allProductos = productoDao.getAllProductos()
     }
 
+    //Implementacion de los metodos del dao
     fun insert(producto: Producto) {
         InsertItemAsyncTask(productoDao).execute(producto)
     }
@@ -34,6 +36,7 @@ class ProductoRepository(application: Application) {
         return allProductos
     }
 
+    //Funciones asincronas para realizar acciones sin esperar a que otras terminen
     private class InsertItemAsyncTask(private val productoDao: ProductoDao) :
         AsyncTask<Producto, Void, Void>() {
 

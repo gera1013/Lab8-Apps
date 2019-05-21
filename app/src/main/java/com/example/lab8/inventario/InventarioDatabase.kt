@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+//Base de datos, entidad inventario
 @Database(entities = [Inventario::class], version = 3, exportSchema = false)
 abstract class InventarioDatabase : RoomDatabase(){
 
@@ -14,6 +15,7 @@ abstract class InventarioDatabase : RoomDatabase(){
 
         private var INSTANCE: InventarioDatabase? = null
 
+        //Funcion de getInstance, asi se asegura de solamente crear una instancia
         fun getInstance(context: Context): InventarioDatabase {
             synchronized(this){
                 var instance = INSTANCE

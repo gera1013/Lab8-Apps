@@ -24,9 +24,10 @@ class NuevoProductoFragment : Fragment() {
         return binding.root
     }
 
+    //Funcion para guardar un producto en la lista de todos los productos
     private fun saveProducto(): Boolean{
-        val nombre = editText2.text.toString()
-        val codigo = editText1.text.toString()
+        val nombre = editText2.text.toString() //Edit text 1, nombre
+        val codigo = editText1.text.toString() //Edit text 2, codigo
 
         if(nombre.trim().isEmpty() || codigo.trim().isEmpty()) {
             Toast.makeText(context, "Ingrese un nombre y un codigo", Toast.LENGTH_LONG).show()
@@ -38,11 +39,13 @@ class NuevoProductoFragment : Fragment() {
         return true
     }
 
+    //Se crea el layout de menu deseado
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.new_menu,menu)
     }
 
+    //Opciones al seleccionar un elemento del menu
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if(saveProducto())
             NavigationUI.onNavDestinationSelected(item, view!!.findNavController())
