@@ -5,9 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 
 class ItemViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: ItemRepository = ItemRepository(application)
-    private val allItems: LiveData<List<Item>> = repository.getAllItems()
+    private val repository: ItemRepository = ItemRepository(application) //Se crea el repositorio
+    private val allItems: LiveData<List<Item>> = repository.getAllItems() //Se obtienen la lista del repositorio
 
+    //Implementacion de los metodos del repositorio
     fun insert(item: Item){
         repository.insert(item)
     }
